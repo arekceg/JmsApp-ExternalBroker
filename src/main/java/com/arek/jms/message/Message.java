@@ -17,15 +17,15 @@ public class Message {
 	Long id;
 
 	String content;
-	String topic;
+	String source;
 	String listenerName;
 
 	public Message() {
 	}
 
-	public Message(String content, String topic, String listenerName) {
+	public Message(String content, String source, String listenerName) {
 		this.content = content;
-		this.topic = topic;
+		this.source = source;
 		this.listenerName = listenerName;
 	}
 
@@ -38,14 +38,14 @@ public class Message {
 		return "Message{" +
 				"id=" + id +
 				", content='" + content + '\'' +
-				", topic='" + topic + '\'' +
+				", source='" + source + '\'' +
 				", listenerName='" + listenerName + '\'' +
 				'}';
 	}
 
 	public static class MessageBuilder {
 		private String content;
-		private String topic;
+		private String source;
 		private String listenerName;
 
 		MessageBuilder() {
@@ -57,8 +57,8 @@ public class Message {
 			return this;
 		}
 
-		public MessageBuilder topic(String topic) {
-			this.topic = topic;
+		public MessageBuilder source(String topic) {
+			this.source = topic;
 			return this;
 		}
 
@@ -68,11 +68,11 @@ public class Message {
 		}
 
 		public Message build() {
-			return new Message(content, topic, listenerName);
+			return new Message(content, source, listenerName);
 		}
 
 		public String toString() {
-			return "Message.MessageBuilder(content=" + this.content + ", topic=" + this.topic + ", listenerName=" + this.listenerName + ")";
+			return "Message.MessageBuilder(content=" + this.content + ", source=" + this.source + ", listenerName=" + this.listenerName + ")";
 		}
 	}
 }

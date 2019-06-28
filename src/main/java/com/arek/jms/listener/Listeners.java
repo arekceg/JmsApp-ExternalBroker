@@ -15,14 +15,42 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class Listeners {
 
+	//fields
+
 	private MessageService messageService;
+
+	//queue listeners
+
+	@JmsListener(destination = "queue", containerFactory = "queueContainerFactory")
+	public void JmsQueueListenerA(String messageContent) {
+		Message message = Message.builder()
+				.content(messageContent)
+				.listenerName("queueListenerA")
+				.source("queue")
+				.build();
+		messageService.saveMessage(message);
+		log.info("== QUEUE LISTENER A: Message saved : " + message);
+	}
+
+	@JmsListener(destination = "queue", containerFactory = "queueContainerFactory")
+	public void JmsQueueListenerB(String messageContent) {
+		Message message = Message.builder()
+				.content(messageContent)
+				.listenerName("queueListenerB")
+				.source("queue")
+				.build();
+		messageService.saveMessage(message);
+		log.info("== QUEUE LISTENER B: Message saved : " + message);
+	}
+
+	//topic listeners
 
 	@JmsListener(destination = TopicNames.A)
 	public void jmsListenerA(String messageContent) {
 		Message message = Message.builder()
 				.content(messageContent)
 				.listenerName(ListenerName.A.toString())
-				.topic(TopicName.A.toString())
+				.source(TopicName.A.toString())
 				.build();
 		messageService.saveMessage(message);
 		log.info("== LISTENER A: Message saved : " + message);
@@ -33,7 +61,7 @@ public class Listeners {
 		Message message = Message.builder()
 				.content(messageContent)
 				.listenerName(ListenerName.B.toString())
-				.topic(TopicName.BC.toString())
+				.source(TopicName.BC.toString())
 				.build();
 		messageService.saveMessage(message);
 		log.info("== LISTENER B: Message saved : " + message);
@@ -44,7 +72,7 @@ public class Listeners {
 		Message message = Message.builder()
 				.content(messageContent)
 				.listenerName(ListenerName.C.toString())
-				.topic(TopicName.BC.toString())
+				.source(TopicName.BC.toString())
 				.build();
 		messageService.saveMessage(message);
 		log.info("== LISTENER C: Message saved : " + message);
