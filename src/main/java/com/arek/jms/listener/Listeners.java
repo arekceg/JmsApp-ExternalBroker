@@ -1,9 +1,8 @@
 package com.arek.jms.listener;
 
+import com.arek.jms.config.JmsConfig;
 import com.arek.jms.message.Message;
 import com.arek.jms.message.MessageService;
-import com.arek.jms.utils.ListenerName;
-import com.arek.jms.utils.TopicName;
 import com.arek.jms.utils.TopicNames;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ public class Listeners {
 
 	//queue listeners
 
-	@JmsListener(destination = "queue", containerFactory = "queueContainerFactory")
+	@JmsListener(destination = "queue", containerFactory = JmsConfig.queueFactory)
 	public void JmsQueueListenerA(String messageContent) {
 		Message message = Message.builder()
 				.content(messageContent)
@@ -32,7 +31,7 @@ public class Listeners {
 		log.info("== QUEUE LISTENER A: Message saved : " + message);
 	}
 
-	@JmsListener(destination = "queue", containerFactory = "queueContainerFactory")
+	@JmsListener(destination = "queue", containerFactory = JmsConfig.queueFactory)
 	public void JmsQueueListenerB(String messageContent) {
 		Message message = Message.builder()
 				.content(messageContent)
@@ -45,34 +44,34 @@ public class Listeners {
 
 	//topic listeners
 
-	@JmsListener(destination = TopicNames.A)
+	@JmsListener(destination = TopicNames.A, containerFactory = JmsConfig.topicFactory)
 	public void jmsListenerA(String messageContent) {
 		Message message = Message.builder()
 				.content(messageContent)
-				.listenerName(ListenerName.A.toString())
-				.source(TopicName.A.toString())
+				.listenerName("topicListenerA")
+				.source(TopicNames.A)
 				.build();
 		messageService.saveMessage(message);
 		log.info("== LISTENER A: Message saved : " + message);
 	}
 
-	@JmsListener(destination = TopicNames.BC)
+	@JmsListener(destination = TopicNames.BC, containerFactory = JmsConfig.topicFactory)
 	public void jmsListenerB(String messageContent) {
 		Message message = Message.builder()
 				.content(messageContent)
-				.listenerName(ListenerName.B.toString())
-				.source(TopicName.BC.toString())
+				.listenerName("topicListenerB")
+				.source(TopicNames.BC)
 				.build();
 		messageService.saveMessage(message);
 		log.info("== LISTENER B: Message saved : " + message);
 	}
 
-	@JmsListener(destination = TopicNames.BC)
+	@JmsListener(destination = TopicNames.BC, containerFactory = JmsConfig.topicFactory)
 	public void jmsListenerC(String messageContent) {
 		Message message = Message.builder()
 				.content(messageContent)
-				.listenerName(ListenerName.C.toString())
-				.source(TopicName.BC.toString())
+				.listenerName("topicListenerC")
+				.source(TopicNames.BC)
 				.build();
 		messageService.saveMessage(message);
 		log.info("== LISTENER C: Message saved : " + message);

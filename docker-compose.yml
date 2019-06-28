@@ -1,7 +1,14 @@
 version: '3.1'
 
 services:
+  activemq:
+    build: ./activemq
+    ports:
+      - 61:61616
+
   jms-app:
+    depends_on:
+      - activemq
     build: .
     ports:
      - 8080:8080
