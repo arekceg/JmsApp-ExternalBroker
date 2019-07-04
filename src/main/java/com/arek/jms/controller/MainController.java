@@ -16,6 +16,7 @@ import javax.jms.Queue;
 import javax.jms.Topic;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -30,17 +31,19 @@ public class MainController {
 		return messageService.getAllMessages();
 	}
 
-	@PostMapping("/send/topic/{topic}/{msg}")
-	public ResponseEntity<String> sendToTopic(@PathVariable String topic,
+	@PostMapping("/send/topic/{topicName}/{msg}")
+	public ResponseEntity<String> sendToTopic(@PathVariable String topicName,
 	                                          @PathVariable String msg) {
-		Topic foundTopic = Arrays.stream(Topics.values())
-				.filter(t -> t.getName().equalsIgnoreCase(topic))
+		Optional<Topic> optTopic = Arrays.stream(Topics.values())
+				.filter(t -> t.getName().equalsIgnoreCase(topicName))
 				.map(Topics::getTopic)
-				.findFirst().orElse(null);
+				.findFirst();
 
-		if (foundTopic == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		if (!optTopic.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 
-		jmsTemplate.convertAndSend(foundTopic, msg);
+		jmsTemplate.convertAndSend(optTopic.get(), msg);
 		return new ResponseEntity<>(msg, HttpStatus.CREATED);
 	}
 
