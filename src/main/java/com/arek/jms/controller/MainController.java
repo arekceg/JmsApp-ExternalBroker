@@ -3,6 +3,10 @@ package com.arek.jms.controller;
 import com.arek.jms.message.Message;
 import com.arek.jms.message.MessageService;
 import com.arek.jms.utils.Topics;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +24,21 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@Api(value = "Main controller for the API")
 public class MainController {
 
 	private JmsTemplate jmsTemplate;
 	private MessageService messageService;
 	private Queue queue;
 
+	@ApiOperation(value = "Returns all sent messages from internal h2 database")
 	@GetMapping("all")
 	public List<Message> getAllMsg() {
 		return messageService.getAllMessages();
 	}
+
+	@ApiOperation(value = "Sends {msg} to selected topic", notes = "Available topic names: A, BC")
+	@ApiResponses(value = @ApiResponse(code = 404, message = "Topic not found, wrong topic name"))
 
 	@PostMapping("/send/topic/{topicName}/{msg}")
 	public ResponseEntity<String> sendToTopic(@PathVariable String topicName,
@@ -47,6 +56,7 @@ public class MainController {
 		return new ResponseEntity<>(msg, HttpStatus.CREATED);
 	}
 
+	@ApiOperation(value = "Sends {msg} to the default queue")
 	@PostMapping("/send/queue/{msg}")
 	public ResponseEntity<String> sendToQueue(@PathVariable String msg) {
 		jmsTemplate.convertAndSend(queue, msg);

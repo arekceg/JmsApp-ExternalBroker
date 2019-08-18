@@ -43,14 +43,9 @@ public class MainControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	private RestTemplateBuilder restTemplateBuilder;
-	private RestTemplate restTemplate;
 
 	@Before
-	public void setUp() throws Exception {
-		restTemplateBuilder = new RestTemplateBuilder();
-		restTemplate = restTemplateBuilder.rootUri("http://localhost:8080/")
-				.build();
+	public void setUp() {
 
 		this.mockMvc = MockMvcBuilders
 				.standaloneSetup(mainController)

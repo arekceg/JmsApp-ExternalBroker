@@ -1,6 +1,8 @@
 package com.arek.jms.message;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -11,17 +13,17 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Message {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	Long id;
 
+	@ApiModelProperty(allowableValues = "String", notes = "Message content")
 	String content;
+	@ApiModelProperty(notes = "Message source: topic or queue")
 	String source;
 	String listenerName;
-
-	public Message() {
-	}
 
 	public Message(String content, String source, String listenerName) {
 		this.content = content;
